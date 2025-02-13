@@ -31,13 +31,12 @@ jobs:
           $NDK_HOME/ndk-build
 
       - name: Zip output files
+
         run: |
           mkdir -p release
           for abi in armeabi-v7a arm64-v8a x86 x86_64; do
             if [ -d "libs/$abi" ]; then
-              mkdir -p release/$abi
-              cp -r libs/$abi/* release/$abi/
-              zip -r release/$abi.zip release/$abi
+              zip -j release/$abi.zip libs/$abi/*
             fi
           done
 
