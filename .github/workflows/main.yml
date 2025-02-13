@@ -1,0 +1,52 @@
+name: Build and Release Library
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Download and Install NDK
+        run: |
+          export NDK_VERSION=28.0.13004108
+          sdkmanager "ndk;$NDK_VERSION"
+          echo "NDK_ROOT=$ANDROID_SDK_ROOT/ndk/$NDK_VERSION" >> $GITHUB_ENV
+          echo "NDK_HOME=$ANDROID_SDK_ROOT/ndk/$NDK_VERSION" >> $GITHUB_ENV
+          echo "NDK Installed at: $ANDROID_SDK_ROOT/ndk/$NDK_VERSION"
+
+      - name: Build with ndk-build
+        run: |
+          $NDK_HOME/ndk-build
+
+      - name: Zip output files
+        run: |
+          mkdir -p release
+          for abi in armeabi-v7a arm64-v8a x86 x86_64; do
+            if [ -d "libs/$abi" ]; then
+              mkdir -p release/$abi
+              cp -r libs/$abi/* release/$abi/
+              zip -r release/$abi.zip release/$abi
+            fi
+          done
+
+      - name: Upload release
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push'
+        with:
+          files: release/*.zip
+          tag_name: latest
+          body: "Latest build"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
