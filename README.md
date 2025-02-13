@@ -19,7 +19,7 @@ This is a trick to load our own libunity.so or libmain.so and load game's rename
 
 ### Non-root
 
-Some games may have APK integrity and signature check. You may need to bypass it before adding Il2CppDumper
+Some games may have APK integrity and signature check. You may need to bypass it before adding AOV-DumpSkinID
 
 - Open APK file as ZIP using Winrar. 7zip or other zip utilities
 - Rename game's libunity.so or libmain.so to libTuanMeta.so
