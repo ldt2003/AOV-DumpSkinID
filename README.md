@@ -56,3 +56,8 @@ Some games may have APK integrity and signature check. You may need to bypass it
 - jmpews [Dobby](https://github.com/jmpews/Dobby)
 - AndnixSH [Auto-Il2cppDumper](https://github.com/AndnixSH/Auto-Il2cppDumper/tree/master)
 - adamyaxley [Obfuscate](https://github.com/adamyaxley/Obfuscate)
+
+> [!WARNING] 
+> This tool is intended for educational and authorized penetration testing purposes only.
+> By using this tool, you agree to use it responsibly and ethically, and to comply with all applicable laws and regulations.
+> The developer assumes no responsibility for any misuse of this tool.
