@@ -2,6 +2,10 @@ name: Build and Release Library
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version for the release (e.g., v1.0.0)'
+        required: true
 
 jobs:
   build:
@@ -26,7 +30,6 @@ jobs:
           $NDK_HOME/ndk-build
 
       - name: Zip output files
-
         run: |
           mkdir -p release
           for abi in armeabi-v7a arm64-v8a x86 x86_64; do
@@ -35,12 +38,16 @@ jobs:
             fi
           done
 
+      - name: Create Git Tag
+        run: |
+          git tag -f ${{ github.event.inputs.version }}
+          git push --force origin ${{ github.event.inputs.version }}
+
       - name: Upload release
         uses: softprops/action-gh-release@v2
-        if: github.event_name == 'push'
         with:
           files: release/*.zip
-          tag_name: latest
-          body: "Latest build"
+          tag_name: ${{ github.event.inputs.version }}
+          body: ""
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
