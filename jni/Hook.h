@@ -5,12 +5,13 @@
 
 void saveToFile(std::string content) {
     static bool firstWrite = false;
-    static std::string path = std::string("/storage/emulated/0/Android/data/") + GetPackageName() + "/files/HeroSkinData.txt";
-    static std::ofstream file(path, std::ios::app);
+    static std::string packageName(GetPackageName());
+    static std::string filePath = "/storage/emulated/0/Android/data/" + packageName + "/files/HeroSkinData.txt";
+    static std::ofstream file(filePath, std::ios::app);
 
-    if (!firstWrite) {  
-        std::ifstream checkFile("/storage/emulated/0/Android/data/com.garena.game.kgvn/files/HeroSkinData.txt");
-        if (checkFile.peek() == std::ifstream::traits_type::eof()) { // Kiểm tra file rỗng
+    if (!firstWrite) {
+        std::ifstream checkFile(filePath);
+        if (checkFile.peek() == std::ifstream::traits_type::eof()) {
             file << "/*\n"
                  << "\tCredit\n"
                  << "\t• Telegram: @TuanMeta\n"
