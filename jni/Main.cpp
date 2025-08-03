@@ -7,7 +7,6 @@
 
 ProcMap il2cppMap;
 void *Init_Thread() {
-
 	while (!il2cppMap.isValid()) {
 		il2cppMap = KittyMemory::getLibraryBaseMap("libil2cpp.so");
 		sleep(1);
@@ -17,15 +16,20 @@ void *Init_Thread() {
 
 	GetHeroName = (String *(*)(uint32_t)) Method("Project_d.dll", "Assets.Scripts.GameSystem", "CHeroInfo", "GetHeroName", 1);
 	GetSkinName = (String *(*)(uint32_t)) Method("Project_d.dll", "Assets.Scripts.GameSystem", "CSkinInfo", "GetSkinName", 1);
-	
-	TuanMetaHook("AovTdr.dll", "ResData", "ResHeroSkin", "TransferData", 1, TransferData, _TransferData);
-	dwID = Field("AovTdr.dll", "ResData", "ResHeroSkin", "dwID");
-	dwHeroID = Field("AovTdr.dll", "ResData", "ResHeroSkin", "dwHeroID");
+	TuanMetaHook("AovTdr.dll", "ResData", "ResHeroSkin", "TransferData", 1, TransferData_HeroSkin, _TransferData_HeroSkin);
+	dwID_HeroSkin = Field("AovTdr.dll", "ResData", "ResHeroSkin", "dwID");
+	dwHeroID_HeroSkin = Field("AovTdr.dll", "ResData", "ResHeroSkin", "dwHeroID");
+
+	TuanMetaHook("AovTdr.dll", "ResData", "ResPersonalButton", "TransferData", 1, TransferData_Button, _TransferData_Button);
+	dwButtonID = Field("AovTdr.dll", "ResData", "ResPersonalButton", "dwID");
+
+	TuanMetaHook("AovTdr.dll", "ResData", "ResKillEffect", "TransferData", 1, TransferData_KillEffect, _TransferData_KillEffect);
+	dwKillEffectID = Field("AovTdr.dll", "ResData", "ResKillEffect", "dwID");
 	
 	return nullptr;
 }
 
-#define RealLibToLoad "libTuanMeta.so"
+#define RealLibToLoad "libmeow.so"
 
 void *pLibRealUnity = 0;
 typedef jint(JNICALL *CallJNI_OnLoad_t)(JavaVM *vm, void *reserved);
@@ -66,6 +70,5 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)
 }
 
 JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
-
     CallJNIUL(vm, reserved);
 }
